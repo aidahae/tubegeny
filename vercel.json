@@ -1,11 +1,12 @@
 {
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/",
       "has": [
         {
           "type": "host",
-          "value": "tubegeny.com"
+          "value": "(www\\.)?tubegeny\\.com"
         }
       ],
       "destination": "/tubegeny.html"
@@ -15,10 +16,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.tubegeny.com"
+          "value": "(www\\.)?lazygeny\\.com"
         }
       ],
-      "destination": "/tubegeny.html"
+      "destination": "/index.html"
     }
   ]
 }
