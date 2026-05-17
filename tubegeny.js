@@ -170,16 +170,38 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('overall-score').textContent = result.score + '%';
             
             const riskItems = document.querySelectorAll('.risk-item');
-            if (riskItems.length > 1) {
-                const targetItem = riskItems[1];
-                targetItem.querySelector('.risk-header span:first-child').textContent = 'AI Deep Scan Result';
-                targetItem.querySelector('.risk-level').textContent = result.riskLevel.toUpperCase();
-                targetItem.querySelector('.risk-level').className = 'risk-level ' + (result.riskLevel === 'high' ? 'high' : 'low');
-                
-                let barColor = result.riskLevel === 'high' ? 'var(--neon-orange)' : '#27c93f';
-                targetItem.querySelector('.fill').style = `width: ${result.score}%; background: ${barColor};`;
-                
-                targetItem.querySelector('.risk-desc').innerHTML = `<strong>Reason:</strong> ${result.riskReason}`;
+            // Remove hardcoded items
+            riskItems.forEach(item => item.remove());
+
+            const breakdownCard = document.querySelector('.risk-breakdown-card');
+            
+            // Render new dynamic categories
+            if (result.categories && result.categories.length > 0) {
+                result.categories.forEach(cat => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'risk-item';
+                    
+                    let barColor = '#27c93f'; // safe
+                    let levelClass = 'low';
+                    if (cat.riskPercentage >= 70) { 
+                        barColor = 'var(--neon-orange)'; 
+                        levelClass = 'high'; 
+                    } else if (cat.riskPercentage >= 30) { 
+                        barColor = '#f6d365'; 
+                        levelClass = 'medium'; 
+                    }
+
+                    itemDiv.innerHTML = `
+                        <div class="risk-header">
+                            <span>${cat.name}</span>
+                            <span class="risk-level ${levelClass}">${cat.status} (${cat.riskPercentage}%)</span>
+                        </div>
+                        <div class="progress-bar"><div class="fill" style="width: ${cat.riskPercentage}%; background: ${barColor};"></div></div>
+                        <p class="risk-desc"><strong>이유:</strong> ${cat.reason}</p>
+                    `;
+                    // Insert before the premium lock card, or just append to the breakdown card
+                    breakdownCard.appendChild(itemDiv);
+                });
             }
 
             // Append to history in My Page
