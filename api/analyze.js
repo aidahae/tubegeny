@@ -1,0 +1,96 @@
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    try {
+        const { channelUrl } = req.body;
+        
+        if (!channelUrl) {
+            return res.status(400).json({ error: 'Channel URL is required' });
+        }
+
+        // We will need these environment variables configured in Vercel
+        const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+        const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+        if (!YOUTUBE_API_KEY || !OPENAI_API_KEY) {
+            return res.status(500).json({ error: 'API keys are missing in Vercel Environment Variables.' });
+        }
+
+        // 1. Extract Handle from URL (e.g. https://youtube.com/@mychannel -> mychannel)
+        let handle = channelUrl;
+        if (channelUrl.includes('@')) {
+            handle = channelUrl.split('@')[1].split('/')[0];
+        }
+
+        // 2. Fetch Channel Data from YouTube API
+        // First, search by handle to get channel ID
+        const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=%40${handle}&key=${YOUTUBE_API_KEY}`);
+        const searchData = await searchRes.json();
+        
+        if (!searchData.items || searchData.items.length === 0) {
+            return res.status(404).json({ error: 'Channel not found' });
+        }
+        
+        const channelId = searchData.items[0].snippet.channelId;
+        const channelTitle = searchData.items[0].snippet.title;
+        const channelDesc = searchData.items[0].snippet.description;
+
+        // Fetch recent videos from the channel
+        const videosRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=5&type=video&key=${YOUTUBE_API_KEY}`);
+        const videosData = await videosRes.json();
+        
+        const recentVideos = videosData.items ? videosData.items.map(v => v.snippet.title).join(' | ') : 'No recent videos';
+
+        // 3. Send data to OpenAI for Analysis
+        const prompt = `
+            You are an expert YouTube algorithm strategist and policy compliance reviewer.
+            Analyze the following YouTube channel data based on official YouTube Community Guidelines (spam, deceptive practices, repetitious content, etc.) and current algorithm trends.
+
+            Channel Name: ${channelTitle}
+            Description: ${channelDesc}
+            Recent 5 Videos: ${recentVideos}
+
+            Output your response EXACTLY in the following JSON format:
+            {
+                "score": 85,
+                "riskLevel": "low", // "low", "medium", or "high"
+                "riskReason": "Analysis of policy risks...",
+                "viralBlueprint1": { "title": "Viral Title Idea 1", "desc": "Brief execution strategy" },
+                "viralBlueprint2": { "title": "Viral Title Idea 2", "desc": "Brief execution strategy" }
+            }
+        `;
+
+        const aiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o',
+                messages: [{ role: 'system', content: prompt }],
+                response_format: { type: 'json_object' }
+            })
+        });
+
+        const aiData = await aiRes.json();
+        
+        if (aiData.error) {
+            throw new Error(aiData.error.message);
+        }
+
+        const analysisResult = JSON.parse(aiData.choices[0].message.content);
+
+        // Return combined result to frontend
+        return res.status(200).json({
+            channelTitle,
+            analysisResult
+        });
+
+    } catch (error) {
+        console.error('API Error:', error);
+        return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+}
