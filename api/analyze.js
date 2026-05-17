@@ -75,33 +75,33 @@ export default async function handler(req, res) {
             Description: ${channelDesc}
             Recent 5 Videos: ${recentVideos}
 
-            Output your response EXACTLY in the following JSON format. Please write all 'reason' fields and 'status' fields in KOREAN:
+            Output your response EXACTLY in the following JSON format. Please write all 'reason' fields and 'status' fields in ENGLISH:
             {
                 "score": 85, // Overall Safety Score (0-100, where 100 is perfectly safe)
                 "riskLevel": "low", // "low", "medium", or "high"
                 "categories": [
                     {
-                        "name": "허위 정보 및 기만성 콘텐츠 (Deceptive Content)",
+                        "name": "Deceptive Content & Misinformation",
                         "riskPercentage": 5, // 0-100 (where 0 is no risk, 100 is extreme risk)
-                        "status": "안전 (Safe)", // or "주의 (Warning)", "위험 (Danger)" depending on riskPercentage
-                        "reason": "공식 문서 기준: 썸네일과 내용의 불일치나 허위 사실 유포 정황이 없습니다."
+                        "status": "Safe", // or "Warning", "Danger" depending on riskPercentage
+                        "reason": "Based on official docs: No signs of clickbait mismatch or false information."
                     },
                     {
-                        "name": "양산형 및 반복 콘텐츠 (Repetitious Content)",
+                        "name": "Repetitious & Mass-Produced Content",
                         "riskPercentage": 65,
-                        "status": "주의 (Warning)",
-                        "reason": "공식 문서 기준: 비슷한 제목 패턴과 썸네일 포맷이 반복되어 알고리즘 스팸으로 분류될 위험이 존재합니다."
+                        "status": "Warning",
+                        "reason": "Based on official docs: Highly similar title patterns and thumbnail formats detected, risking algorithm spam classification."
                     },
                     {
-                        "name": "스팸 및 현혹 행위 (Spam & Misleading)",
+                        "name": "Spam & Misleading Practices",
                         "riskPercentage": 10,
-                        "status": "안전 (Safe)",
+                        "status": "Safe",
                         "reason": "..."
                     },
                     {
-                        "name": "저작권 및 재사용 콘텐츠 (Reused Content)",
+                        "name": "Copyright & Reused Content",
                         "riskPercentage": 20,
-                        "status": "안전 (Safe)",
+                        "status": "Safe",
                         "reason": "..."
                     }
                 ],

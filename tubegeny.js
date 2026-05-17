@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="risk-level ${levelClass}">${cat.status} (${cat.riskPercentage}%)</span>
                         </div>
                         <div class="progress-bar"><div class="fill" style="width: ${cat.riskPercentage}%; background: ${barColor};"></div></div>
-                        <p class="risk-desc"><strong>이유:</strong> ${cat.reason}</p>
+                        <p class="risk-desc"><strong>Reason:</strong> ${cat.reason}</p>
                     `;
                     // Insert before the premium lock card, or just append to the breakdown card
                     breakdownCard.appendChild(itemDiv);
