@@ -22,14 +22,16 @@ export default async function handler(req, res) {
         let channelId;
         let channelTitle;
         let channelDesc;
+        let lastApiError = null;
 
         if (channelUrl.includes('@')) {
             const handle = channelUrl.split('@')[1].split('/')[0];
-            // Use the more reliable channels API with forHandle
             const handleRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet&forHandle=%40${handle}&key=${YOUTUBE_API_KEY}`);
             const handleData = await handleRes.json();
             
-            if (handleData.items && handleData.items.length > 0) {
+            if (handleData.error) {
+                lastApiError = handleData.error.message;
+            } else if (handleData.items && handleData.items.length > 0) {
                 channelId = handleData.items[0].id;
                 channelTitle = handleData.items[0].snippet.title;
                 channelDesc = handleData.items[0].snippet.description;
@@ -38,7 +40,6 @@ export default async function handler(req, res) {
 
         // 2. Fallback to Search API if not found by handle
         if (!channelId) {
-            // If they just entered a name or URL without @, search for it
             let query = channelUrl;
             if (channelUrl.includes('@')) {
                 query = '@' + channelUrl.split('@')[1].split('/')[0];
@@ -46,8 +47,12 @@ export default async function handler(req, res) {
             const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}`);
             const searchData = await searchRes.json();
             
+            if (searchData.error) {
+                return res.status(500).json({ error: 'YouTube API Error: ' + searchData.error.message });
+            }
+
             if (!searchData.items || searchData.items.length === 0) {
-                return res.status(404).json({ error: 'Channel not found. Please check the URL or try entering the @handle directly.' });
+                return res.status(404).json({ error: lastApiError ? `YouTube API Error: ${lastApiError}` : 'Channel not found. Please check the URL.' });
             }
             
             channelId = searchData.items[0].snippet.channelId;
