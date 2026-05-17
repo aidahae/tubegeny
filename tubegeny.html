@@ -12,7 +12,7 @@
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="logo"><i class="fa-brands fa-youtube" style="color: var(--neon-primary);"></i> TubeGeny</div>
+        <a href="#" class="logo" id="logo-btn" style="text-decoration:none;"><i class="fa-brands fa-youtube" style="color: var(--neon-primary);"></i> TubeGeny</a>
         <div class="nav-links" id="nav-links-default">
             <a href="#why-need">Why TubeGeny?</a>
             <a href="#features">Features</a>
@@ -266,7 +266,7 @@
             </div>
 
             <!-- Next Strategy (Locked for Pro) -->
-            <div class="dash-card strategy-card premium-lock 3d-hover">
+            <div class="dash-card strategy-card premium-lock 3d-hover" style="grid-column: 1 / -1; max-width: 900px; margin: 0 auto; width: 100%;">
                 <div class="premium-ribbon">👑 PRO EXCLUSIVE</div>
                 <h3>🚀 Algorithm-Hacking Viral Blueprints</h3>
                 <p class="hook-text">Analysis complete. We found a critical 'loophole' to boost your algorithm exposure by <strong>300%+</strong>.<br>Apply these blueprints to your next video for an explosion in views.</p>
@@ -464,22 +464,36 @@
         });
 
         // Dummy Login Actions
-        function mockLogin(provider) {
-            currentUser = {
-                name: "Creator_" + provider,
-                email: "user@" + provider + ".com",
-                plan: "Free Tier",
-                history: []
-            };
-            localStorage.setItem('tubegeny_user', JSON.stringify(currentUser));
-            loginModal.classList.add('hidden');
-            alert(`Successfully logged in via ${provider}!`);
-            updateUIAfterLogin();
+        function mockLogin(provider, btnId) {
+            const btn = document.getElementById(btnId);
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Logging in...`;
+            btn.style.opacity = '0.8';
+            btn.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                currentUser = {
+                    name: "Creator_" + provider,
+                    email: "user@" + provider + ".com",
+                    plan: "Free Tier",
+                    history: []
+                };
+                localStorage.setItem('tubegeny_user', JSON.stringify(currentUser));
+                loginModal.classList.add('hidden');
+                
+                // Reset btn
+                btn.innerHTML = originalHTML;
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                
+                updateUIAfterLogin();
+            }, 800);
         }
 
-        document.getElementById('btn-apple-login').addEventListener('click', () => mockLogin('Apple'));
-        document.getElementById('btn-twitter-login').addEventListener('click', () => mockLogin('X'));
-        document.getElementById('btn-facebook-login').addEventListener('click', () => mockLogin('Facebook'));
+        document.getElementById('btn-google-login').addEventListener('click', () => mockLogin('Google', 'btn-google-login'));
+        document.getElementById('btn-apple-login').addEventListener('click', () => mockLogin('Apple', 'btn-apple-login'));
+        document.getElementById('btn-twitter-login').addEventListener('click', () => mockLogin('X', 'btn-twitter-login'));
+        document.getElementById('btn-facebook-login').addEventListener('click', () => mockLogin('Facebook', 'btn-facebook-login'));
 
         // Analyze Button (Mock)
         const analyzeBtn = document.getElementById('analyze-btn');
@@ -492,7 +506,7 @@
                 }
                 
                 if (!currentUser) {
-                    alert("Please log in to scan your channel.");
+                    // Show login modal if not logged in
                     loginModal.classList.remove('hidden');
                     return;
                 }
@@ -513,10 +527,20 @@
         }
 
         // Navigation
+        document.getElementById('logo-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('mypage').classList.add('hidden');
+            document.getElementById('landing-content').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        });
+
         document.getElementById('back-home-btn').addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('mypage').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('landing-content').classList.remove('hidden');
+            window.scrollTo(0, 0);
         });
 
         document.getElementById('mypage-nav-btn').addEventListener('click', (e) => {
