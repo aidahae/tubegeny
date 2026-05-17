@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="tubegeny-style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -258,10 +259,25 @@
                 <h2>Please <span class="highlight">Log in</span> for your free scan.</h2>
                 <p>To prevent bot abuse, authentication is required.<br><small>*We track Channel IDs, so only 1 free scan is allowed per channel regardless of multiple accounts.</small></p>
             </div>
-            <div class="sns-login-container">
-                <button class="sns-btn google" onclick="handleSnsLogin('Google')">
-                    <i class="fa-brands fa-google"></i> Continue with Google
-                </button>
+            <div class="sns-login-container" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-top: 1rem;">
+                
+                <!-- Real Google Login -->
+                <div id="g_id_onload"
+                     data-client_id="657771241356-qljbbdtni02rkel499bda5o4destdpmv.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleGoogleLogin"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-shape="rectangular"
+                     data-theme="outline"
+                     data-text="signin_with"
+                     data-size="large"
+                     data-logo_alignment="left"
+                     data-width="300">
+                </div>
                 <button class="sns-btn apple" style="background: #000; color: #fff;" onclick="handleSnsLogin('Apple')">
                     <i class="fa-brands fa-apple"></i> Continue with Apple
                 </button>

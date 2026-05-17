@@ -62,20 +62,43 @@ document.addEventListener('DOMContentLoaded', () => {
         startAnalysis(url);
     });
 
-    // Make handleSnsLogin globally accessible for the onclick handlers in HTML
+    // Make handleSnsLogin globally accessible for the fake buttons
     window.handleSnsLogin = function(provider) {
-        // Fake SNS Login Process
-        alert(`Successfully logged in with ${provider}.`);
+        alert(`${provider} login is not fully implemented yet. Please use Google Login.`);
+    };
+
+    // Real Google Auth Callback
+    window.handleGoogleLogin = function(response) {
+        // Decode the JWT credential
+        const responsePayload = decodeJwtResponse(response.credential);
+        
+        console.log("ID: " + responsePayload.sub);
+        console.log('Full Name: ' + responsePayload.name);
+        console.log('Given Name: ' + responsePayload.given_name);
+        console.log('Family Name: ' + responsePayload.family_name);
+        console.log("Image URL: " + responsePayload.picture);
+        console.log("Email: " + responsePayload.email);
+
+        alert(`Successfully logged in as ${responsePayload.name} (${responsePayload.email})!`);
+        
         isLoggedIn = true;
         hideModal();
-        loginNavBtn.textContent = 'My Page'; // Change nav button text
+        loginNavBtn.textContent = 'My Page';
 
-        // If user came from analyze button, start analysis automatically
         if (pendingUrlToAnalyze) {
             startAnalysis(pendingUrlToAnalyze);
             pendingUrlToAnalyze = '';
         }
     };
+
+    function decodeJwtResponse(token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    }
 
     async function startAnalysis(url) {
         // AI Analysis State
