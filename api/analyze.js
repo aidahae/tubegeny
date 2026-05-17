@@ -8,16 +8,16 @@ export default async function handler(req, res) {
     }
 
     try {
+        const { channelUrl, isPro } = req.body;
+        
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
         
-        // Bypass rate limit for Admins
+        // Bypass rate limit for Admins or Pro Users
         const isAdmin = ADMIN_IPS.some(adminIp => ip.includes(adminIp));
         
-        if (!isAdmin && ip !== 'unknown' && ipCache.has(ip)) {
+        if (!isAdmin && !isPro && ip !== 'unknown' && ipCache.has(ip)) {
             return res.status(429).json({ error: 'You have already used your 1 free scan from this IP address. Please upgrade to Pro to continue.' });
         }
-
-        const { channelUrl } = req.body;
         
         if (!channelUrl) {
             return res.status(400).json({ error: 'Channel URL is required' });

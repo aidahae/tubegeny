@@ -147,31 +147,70 @@ document.addEventListener('DOMContentLoaded', () => {
         window.startAnalysisGlobal(url);
     });
 
-    window.addHistoryItem = function(url, score, isSafe) {
+    // === MVP Local Database (localStorage) ===
+    window.db = {
+        getHistory: function() {
+            return JSON.parse(localStorage.getItem('tubeGenyHistory') || '[]');
+        },
+        saveHistory: function(item) {
+            const history = this.getHistory();
+            history.unshift(item); // Add to beginning
+            localStorage.setItem('tubeGenyHistory', JSON.stringify(history));
+        },
+        isPro: function() {
+            return localStorage.getItem('tubeGenyIsPro') === 'true';
+        },
+        setPro: function(status) {
+            localStorage.setItem('tubeGenyIsPro', status);
+        }
+    };
+
+    window.loadHistory = function() {
         const tbody = document.getElementById('mypage-history-body');
         if (!tbody) return;
-        
-        const dateStr = new Date().toISOString().split('T')[0];
-        const riskClass = isSafe ? 'low' : 'high';
-        const riskColor = isSafe ? '#27c93f' : 'var(--neon-orange)';
-        const riskBadge = isSafe ? 'Safe' : 'Warning';
-        
-        const tr = document.createElement('tr');
-        tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-        tr.innerHTML = `
-            <td style="padding: 1rem;">${dateStr}</td>
-            <td style="padding: 1rem; color: #fff;">${url}</td>
-            <td style="padding: 1rem;">
-                <span class="risk-level ${riskClass}" style="padding: 0.2rem 0.5rem; font-size:0.9rem; background: ${riskColor}22; border: 1px solid ${riskColor}; color: ${riskColor}; border-radius: 4px;">
-                    ${score}% (${riskBadge})
-                </span>
-            </td>
-            <td style="padding: 1rem;">
-                <button class="btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;" onclick="alert('Viewing past reports requires Pro plan!')">View Report</button>
-            </td>
-        `;
-        tbody.insertBefore(tr, tbody.firstChild);
+        tbody.innerHTML = ''; // Clear existing
+
+        const history = window.db.getHistory();
+        history.forEach(item => {
+            const riskClass = item.isSafe ? 'low' : 'high';
+            const riskColor = item.isSafe ? '#27c93f' : 'var(--neon-orange)';
+            const riskBadge = item.isSafe ? 'Safe' : 'Warning';
+            
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+            tr.innerHTML = `
+                <td style="padding: 1rem;">${item.dateStr}</td>
+                <td style="padding: 1rem; color: #fff;">${item.url}</td>
+                <td style="padding: 1rem;">
+                    <span class="risk-level ${riskClass}" style="padding: 0.2rem 0.5rem; font-size:0.9rem; background: ${riskColor}22; border: 1px solid ${riskColor}; color: ${riskColor}; border-radius: 4px;">
+                        ${item.score}% (${riskBadge})
+                    </span>
+                </td>
+                <td style="padding: 1rem;">
+                    <button class="btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;" onclick="window.viewReport('${item.url}')">View Report</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
     };
+
+    window.viewReport = function(url) {
+        if (window.db.isPro()) {
+            alert('Opening detailed AI blueprint report for: ' + url + '\n(Pro Feature Unlocked!)');
+            // In a real app, this would open a modal with the saved AI JSON response
+        } else {
+            alert('Viewing past reports and Viral Blueprints requires the Pro plan! Please upgrade.');
+        }
+    };
+
+    window.addHistoryItem = function(url, score, isSafe) {
+        const dateStr = new Date().toISOString().split('T')[0];
+        window.db.saveHistory({ url, score, isSafe, dateStr });
+        window.loadHistory();
+    };
+
+    // Load history on startup
+    window.loadHistory();
 
     window.startAnalysisGlobal = async function(url) {
         const originalText = analyzeBtn.innerHTML;
@@ -183,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ channelUrl: url })
+                body: JSON.stringify({ channelUrl: url, isPro: window.db.isPro() })
             });
 
             const data = await response.json();
