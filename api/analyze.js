@@ -1,9 +1,17 @@
+// Simple in-memory IP cache for rate limiting (persists while Vercel function is warm)
+const ipCache = new Set();
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+        if (ip !== 'unknown' && ipCache.has(ip)) {
+            return res.status(429).json({ error: 'You have already used your 1 free scan from this IP address. Please upgrade to Pro to continue.' });
+        }
+
         const { channelUrl } = req.body;
         
         if (!channelUrl) {
@@ -70,6 +78,7 @@ export default async function handler(req, res) {
         const prompt = `
             You are an expert YouTube algorithm strategist and policy compliance reviewer.
             Analyze the following YouTube channel data based on official YouTube Community Guidelines (spam, deceptive practices, repetitious content, copyright, etc.) and current algorithm trends.
+            CRITICAL: Do NOT output exactly 85, 5, 65, 10, 20 like the example. You MUST CALCULATE REAL SCORES based on the actual channel data!
 
             Channel Name: ${channelTitle}
             Description: ${channelDesc}
@@ -77,38 +86,39 @@ export default async function handler(req, res) {
 
             Output your response EXACTLY in the following JSON format. Please write all 'reason' fields and 'status' fields in ENGLISH:
             {
-                "score": 85, // Overall Safety Score (0-100, where 100 is perfectly safe)
-                "riskLevel": "low", // "low", "medium", or "high"
+                "score": [CALCULATE REAL OVERALL SCORE 0-100],
+                "riskLevel": "[low, medium, or high]",
                 "categories": [
                     {
                         "name": "Deceptive Content & Misinformation",
-                        "riskPercentage": 5, // 0-100 (where 0 is no risk, 100 is extreme risk)
-                        "status": "Safe", // or "Warning", "Danger" depending on riskPercentage
-                        "reason": "Based on official docs: No signs of clickbait mismatch or false information."
+                        "riskPercentage": [CALCULATE 0-100],
+                        "status": "[Safe / Warning / Danger]",
+                        "reason": "[Write specific reason based on data]"
                     },
                     {
                         "name": "Repetitious & Mass-Produced Content",
-                        "riskPercentage": 65,
-                        "status": "Warning",
-                        "reason": "Based on official docs: Highly similar title patterns and thumbnail formats detected, risking algorithm spam classification."
+                        "riskPercentage": [CALCULATE 0-100],
+                        "status": "[Safe / Warning / Danger]",
+                        "reason": "[Write specific reason based on data]"
                     },
                     {
                         "name": "Spam & Misleading Practices",
-                        "riskPercentage": 10,
-                        "status": "Safe",
-                        "reason": "..."
+                        "riskPercentage": [CALCULATE 0-100],
+                        "status": "[Safe / Warning / Danger]",
+                        "reason": "[Write specific reason based on data]"
                     },
                     {
                         "name": "Copyright & Reused Content",
-                        "riskPercentage": 20,
-                        "status": "Safe",
-                        "reason": "..."
+                        "riskPercentage": [CALCULATE 0-100],
+                        "status": "[Safe / Warning / Danger]",
+                        "reason": "[Write specific reason based on data]"
                     }
                 ],
                 "viralBlueprint1": { "title": "Viral Title Idea 1", "desc": "Brief execution strategy" },
                 "viralBlueprint2": { "title": "Viral Title Idea 2", "desc": "Brief execution strategy" }
             }
         `;
+
 
         const aiRes = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
@@ -130,6 +140,11 @@ export default async function handler(req, res) {
         }
 
         const analysisResult = JSON.parse(aiData.choices[0].message.content);
+
+        // Register IP in cache to prevent multiple free scans
+        if (ip !== 'unknown') {
+            ipCache.add(ip);
+        }
 
         // Return combined result to frontend
         return res.status(200).json({
