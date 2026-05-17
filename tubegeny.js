@@ -77,28 +77,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    function startAnalysis(url) {
-        // Simulate AI Analysis State
+    async function startAnalysis(url) {
+        // AI Analysis State
         const originalText = analyzeBtn.innerHTML;
-        analyzeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scanning Official Docs...';
+        analyzeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing via YouTube & OpenAI...';
         analyzeBtn.style.opacity = '0.8';
         analyzeBtn.disabled = true;
 
-        // Fake network request delay (Simulating heavy AI processing)
-        setTimeout(() => {
-            // Restore button just in case user comes back
-            analyzeBtn.innerHTML = originalText;
-            analyzeBtn.style.opacity = '1';
-            analyzeBtn.disabled = false;
-            
-            // Extract a fake channel name from URL if possible
-            let channelName = url;
-            if(url.includes('@')) {
-                channelName = '@' + url.split('@')[1].split('/')[0];
-            } else {
-                channelName = "Your";
+        try {
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ channelUrl: url })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to analyze channel.');
             }
-            dashChannelName.textContent = channelName;
+
+            // Update UI with Real AI Data
+            dashChannelName.textContent = data.channelTitle || url;
+            
+            const result = data.analysisResult;
+            document.getElementById('overall-score').textContent = result.score + '%';
+            
+            // Find the risk breakdown container and update the second risk item (the main warning one)
+            const riskItems = document.querySelectorAll('.risk-item');
+            if (riskItems.length > 1) {
+                const targetItem = riskItems[1];
+                targetItem.querySelector('.risk-header span:first-child').textContent = 'AI Deep Scan Result';
+                targetItem.querySelector('.risk-level').textContent = result.riskLevel.toUpperCase();
+                targetItem.querySelector('.risk-level').className = 'risk-level ' + (result.riskLevel === 'high' ? 'high' : 'low');
+                
+                let barColor = result.riskLevel === 'high' ? 'var(--neon-orange)' : '#27c93f';
+                targetItem.querySelector('.fill').style = `width: ${result.score}%; background: ${barColor};`;
+                
+                targetItem.querySelector('.risk-desc').innerHTML = `<strong>Reason:</strong> ${result.riskReason}`;
+            }
 
             // Transition UI: Hide landing, Show Dashboard
             landingContent.classList.add('hidden');
@@ -107,9 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
             dashboardSection.classList.remove('hidden');
             navDashboard.classList.remove('hidden');
 
-            // Scroll to top of dashboard
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-        }, 3500); // 3.5 seconds to feel like it's actually crunching data
+
+        } catch (error) {
+            alert('Error during analysis: ' + error.message);
+        } finally {
+            // Restore button
+            analyzeBtn.innerHTML = originalText;
+            analyzeBtn.style.opacity = '1';
+            analyzeBtn.disabled = false;
+        }
     }
 });
