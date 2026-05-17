@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Indie Portfolio - 3D Neon Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="ambient-glow"></div>
+    <div class="layout">
+        <!-- Left Sidebar (3D Floating Profile) -->
+        <aside class="sidebar">
+            <div class="profile-card 3d-element">
+                <div class="profile-img-container">
+                    <img src="profile.png" alt="Profile" class="avatar">
+                </div>
+                
+                <h1 class="name">Lazy GENY</h1>
+                <p class="tagline">The AI Automation Guy</p>
+                
+                <div class="stats-box neon-box">
+                    <span class="location"><i class="fa-solid fa-earth-asia"></i> Global</span>
+                    <span class="total-mrr-badge"><i class="fa-solid fa-bolt"></i> <span id="total-mrr">$0</span><span class="mo">/mo</span></span>
+                </div>
+                
+                <p class="bio">
+                    No manual sales. Just AI agents shipping scalable B2B micro-SaaS while I sleep.
+                </p>
+                
+                <form class="subscribe-form" onsubmit="event.preventDefault(); alert('Subscribed!');">
+                    <input type="email" placeholder="Join 12,402 founders..." required>
+                    <button type="submit" class="neon-btn">Follow My Journey</button>
+                </form>
+                
+                <div class="social-links">
+                    <a href="#" class="neon-icon"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="neon-icon"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="neon-icon"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Content (3D Cards Grid) -->
+        <main class="projects-grid" id="project-list">
+            <!-- Projects injected via JS -->
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

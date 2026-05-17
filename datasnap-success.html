@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 완료 - ShipFast B2B</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shipfast-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .success-container {
+            max-width: 800px;
+            margin: 6rem auto;
+            text-align: center;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: var(--neon-cyan);
+            filter: blur(100px);
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        .success-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .check-icon {
+            font-size: 5rem;
+            color: #27c93f;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(39, 201, 63, 0.5);
+            animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .success-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+        }
+
+        .download-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--neon-cyan);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-download {
+            display: inline-block;
+            background: var(--neon-cyan);
+            color: #000;
+            font-size: 1.3rem;
+            font-weight: 800;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--neon-glow);
+            margin-bottom: 1rem;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px var(--neon-glow);
+            background: #fff;
+        }
+
+        .next-steps {
+            text-align: left;
+            background: rgba(0,0,0,0.5);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .next-steps h3 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.2rem;
+            gap: 1rem;
+        }
+
+        .step-item i {
+            color: var(--neon-cyan);
+            font-size: 1.2rem;
+            margin-top: 3px;
+        }
+
+        .step-item p {
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .step-item strong {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><i class="fa-solid fa-bolt" style="color: var(--neon-cyan);"></i> ShipFast B2B</div>
+    </nav>
+
+    <div class="success-container">
+        <div class="success-content">
+            <i class="fa-solid fa-circle-check check-icon"></i>
+            <h1 class="success-title">결제가 완료되었습니다!</h1>
+            <p class="success-desc">대표님의 탁월한 선택을 축하합니다. 249,000원이 정상 결제되었습니다.<br>이제 지루한 코딩은 끝났습니다. 아이디어를 현실로 만들 시간입니다.</p>
+
+            <div class="download-box">
+                <a href="ShipFast_B2B_SourceCode.zip" download="ShipFast_B2B_SourceCode.zip" class="btn-download">
+                    <i class="fa-solid fa-download"></i> 원본 소스 코드 다운로드 (.zip)
+                </a>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 1rem;">용량: 24.5MB | 버전: v2.1.0 (최신)</p>
+            </div>
+
+            <div class="next-steps">
+                <h3>💡 다운로드 후 다음 단계 가이드</h3>
+                <div class="step-item">
+                    <i class="fa-solid fa-1"></i>
+                    <p><strong>압축 풀기 및 에디터 열기:</strong> 다운로드 받은 zip 파일의 압축을 풀고, VS Code 같은 코드 에디터로 폴더를 엽니다.</p>
+                </div>
+                <div class="step-item">
+                    <i class="fa-solid fa-2"></i>
+                    <p><strong>.env 파일 설정 (내 통장 연결):</strong> <code>.env</code> 파일을 열어 토스페이먼츠와 카카오 로그인 API 키를 붙여넣어 대표님의 계정과 연결합니다.</p>
+                </div>
+                <div class="step-item">
+                    <i class="fa-solid fa-3"></i>
+                    <p><strong>내 아이디어 코딩하기:</strong> <code>page.js</code> 파일을 열어 텅 빈 공간에 대표님이 생각하신 대박 사업 아이디어를 마음껏 코딩하세요.</p>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="#" style="color: var(--neon-cyan); text-decoration: underline;">👉 상세한 1:1 한글 세팅 가이드북 읽기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

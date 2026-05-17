@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "tubegeny.com"
+        }
+      ],
+      "destination": "/tubegeny.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.tubegeny.com"
+        }
+      ],
+      "destination": "/tubegeny.html"
+    }
+  ]
+}

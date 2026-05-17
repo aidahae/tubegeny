@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeGeny - Protect Your Channel & Viral AI Blueprints</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="tubegeny-style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo"><i class="fa-brands fa-youtube" style="color: var(--neon-red);"></i> TubeGeny</div>
+        <div class="nav-links" id="nav-links-default">
+            <a href="#why-need">Why TubeGeny?</a>
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="index.html" class="portfolio-link">Portfolio</a>
+            <a href="#" id="login-nav-btn" class="btn-outline" style="padding: 0.5rem 1rem; margin-left: 1rem;">Login</a>
+        </div>
+        <div class="nav-links hidden" id="nav-links-dashboard">
+            <a href="tubegeny.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <div id="landing-content">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="glow-bg"></div>
+            <div class="hero-content reveal">
+                <div class="badge">🔥 The Essential Survival Tool for YouTubers</div>
+                <h1 class="hero-title">
+                    What if the channel you spent years building<br>
+                    <span class="highlight">gets suspended overnight?</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Escape the constant fear of demonetization and sleepless nights planning videos.<br>
+                    In just 10 seconds with one link, get an <strong>AI safety scan based on official policies</strong> and <strong>viral blueprints handpicked by the algorithm</strong>.
+                </p>
+                
+                <div class="url-input-box">
+                    <i class="fa-solid fa-link"></i>
+                    <input type="text" id="youtube-url" placeholder="https://youtube.com/@mychannel">
+                    <button id="analyze-btn" class="btn-primary">Scan My Channel</button>
+                </div>
+                <p class="trust-text">🔒 Precision AI analysis based on the latest YouTube Community Guidelines. (Auto-updates daily)</p>
+            </div>
+        </header>
+
+        <!-- Why Need Section -->
+        <section id="why-need" class="reveal" style="padding: 5rem 2rem; max-width: 800px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 2rem; color: #fff;">The Silent Fear <span style="color: var(--neon-red);">90% of YouTubers</span> Face</h2>
+            <div style="text-align: left; background: rgba(255,255,255,0.03); padding: 2.5rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <p style="font-size: 1.2rem; color: #ccc; margin-bottom: 2rem; line-height: 1.8; font-style: italic;">
+                    "I subconsciously open the YouTube Studio app the moment I wake up.<br>
+                    Just to check if I got a <strong>yellow icon</strong> or if my <strong>monetization is suspended</strong>..."
+                </p>
+                <div style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.8;">
+                    <p style="margin-bottom: 10px;">✅ Policies change daily, and there's no way to fact-check if your video is safe.</p>
+                    <p style="margin-bottom: 10px;">✅ Dealing with hate comments destroys your mental health.</p>
+                    <p>✅ You stare at your laptop all night, clueless about what to film next to get views.</p>
+                </div>
+                <p style="font-size: 1.4rem; font-weight: bold; color: #fff; margin-top: 2.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                    Leave the anxiety to TubeGeny, and <br><span style="color: var(--neon-orange);">focus purely on 'creating'.</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section reveal">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">3 Magic Solutions in <span style="color: var(--neon-orange);">10 Seconds</span></h2>
+
+            <div class="feature-showcase">
+                <!-- Feature 1 -->
+                <div class="feature-item reveal fade-right">
+                    <div class="feature-text">
+                        <span class="step-num">01</span>
+                        <h3>Fact-Check Against Official Policies</h3>
+                        <p>No more guessing. Our AI, trained entirely on YouTube's Official Community Guidelines, analyzes your channel's safety. Identify risks with 99% accuracy before getting a strike or yellow icon.</p>
+                    </div>
+                    <div class="feature-visual">
+                        <div class="mockup-box alert-mockup">
+                            <i class="fa-solid fa-file-contract text-red"></i>
+                            <p><strong>🚨 Policy Violation Alert!</strong> [Policy: Repetitious Content] 78% risk detected. Action required before YPP suspension.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-item reverse reveal fade-left">
+                    <div class="feature-text">
+                        <span class="step-num">02</span>
+                        <h3>Instant Comment Defense & Alerts</h3>
+                        <p>Stop refreshing the Studio app. All comments are sent directly to your phone via SMS/Messenger. AI flags hate speech instantly, and you can reply directly from your chat app to YouTube.</p>
+                    </div>
+                    <div class="feature-visual">
+                        <div class="mockup-box kakao-mockup">
+                            <p class="kakao-msg">💬 <strong>New Comment:</strong> "This video is so helpful! What editing software do you use?"</p>
+                            <p class="kakao-reply">👉 <strong>Reply via SMS:</strong> I use Premiere Pro! Thanks for watching 😊 <span class="badge-small">Sent to YouTube</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-item reveal fade-right">
+                    <div class="feature-text">
+                        <span class="step-num">03</span>
+                        <h3>Algorithm-Hacking Viral Blueprints</h3>
+                        <p>Not just random ideas. Get keywords the algorithm is pushing right now, high-CTR thumbnail copy, and script structures that skyrocket retention. Just copy, paste, and film.</p>
+                    </div>
+                    <div class="feature-visual">
+                        <div class="mockup-box idea-mockup">
+                            <p class="tag">🔥 Algorithm Recommendation</p>
+                            <h4>Title: "[Never Leak This] Why doing XXX will ruin your channel"</h4>
+                            <p class="seo-score">Tags: #YouTubeAlgorithm #ViralGrowth #Monetization</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing-section reveal fade-up">
+            <h2 class="section-title">The Best Investment to <span class="highlight">Protect Your Channel</span></h2>
+            <p class="section-desc" style="text-align: center; color: var(--text-muted); margin-bottom: 3rem;">Eliminate the fear of channel deletion for the price of a cup of coffee.</p>
+            
+            <div class="pricing-grid">
+                <!-- Basic -->
+                <div class="pricing-card basic">
+                    <h3>Basic</h3>
+                    <p class="price-desc">For those who just want to ensure channel safety.</p>
+                    <div class="price">
+                        <span class="currency">$</span>3.50<span class="period">/mo</span>
+                    </div>
+                    <p class="price-compare">Save on 1 cup of Starbucks</p>
+                    
+                    <ul class="benefit-list">
+                        <li><i class="fa-solid fa-check"></i> 1 Channel Supported</li>
+                        <li><i class="fa-solid fa-check"></i> Manual Deep Scans (10/mo)</li>
+                        <li><i class="fa-solid fa-check"></i> Basic Safety Reports</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> No Viral Blueprints</li>
+                        <li class="disabled"><i class="fa-solid fa-xmark"></i> No Auto-Comment Alerts</li>
+                    </ul>
+                    <button class="btn-blue full-width" onclick="window.location.href='tubegeny-checkout.html?plan=basic'">Start Basic Plan</button>
+                </div>
+
+                <!-- Premium -->
+                <div class="pricing-card premium">
+                    <div class="popular-badge">Top 1% Creators' Choice</div>
+                    <h3>Pro</h3>
+                    <p class="price-desc">Unlimited protection, viral strategies, and auto-engagement.</p>
+                    <div class="price">
+                        <span class="currency">$</span>10.50<span class="period">/mo</span>
+                    </div>
+                    <p class="price-compare">Your perfect 24/7 channel manager</p>
+                    
+                    <ul class="benefit-list">
+                        <li><i class="fa-solid fa-check"></i> <strong>Unlimited Channels</strong></li>
+                        <li><i class="fa-solid fa-check"></i> <strong>24/7 Demonetization Monitoring</strong></li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Instant Comment Alerts & Auto-Replies</strong></li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Unlimited AI Viral Blueprints</strong></li>
+                        <li><i class="fa-solid fa-check"></i> Weekly Algorithm Trend Reports</li>
+                    </ul>
+                    <button class="btn-primary full-width" onclick="window.location.href='tubegeny-checkout.html?plan=pro'">Start Pro Plan</button>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>&copy; 2026 TubeGeny. Rooting for your channel's viral success.</p>
+        </footer>
+    </div> <!-- /#landing-content -->
+
+    <!-- Dashboard Section (Hidden Initially) -->
+    <section id="dashboard" class="dashboard-section hidden">
+        <div class="dashboard-header">
+            <h2>📊 <span id="dash-channel-name">@mychannel</span> Deep-Dive Report</h2>
+            <p>Based on YouTube Community Guidelines & Search Algorithm</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Safety Score -->
+            <div class="dash-card safety-score-card">
+                <h3>Overall Channel Safety</h3>
+                <div class="circular-progress">
+                    <div class="inner-circle">
+                        <h2 id="overall-score">82%</h2>
+                        <span>Safe (Good)</span>
+                    </div>
+                </div>
+                <p class="alert-text"><i class="fa-solid fa-circle-info"></i> Some potential risk factors detected.</p>
+            </div>
+
+            <!-- Risk Breakdown -->
+            <div class="dash-card risk-breakdown-card">
+                <h3>⚠️ Policy Violation Risk Breakdown (Official Docs)</h3>
+                
+                <div class="risk-item">
+                    <div class="risk-header">
+                        <span>Misinformation & Deceptive Content</span>
+                        <span class="risk-level low">Safe (2%)</span>
+                    </div>
+                    <div class="progress-bar"><div class="fill" style="width: 2%; background: #27c93f;"></div></div>
+                    <p class="risk-desc">Reason: Official Docs Section 3 - Low probability of clickbait mismatch.</p>
+                </div>
+
+                <div class="risk-item">
+                    <div class="risk-header">
+                        <span>Repetitious Content</span>
+                        <span class="risk-level high">Warning (78%)</span>
+                    </div>
+                    <div class="progress-bar"><div class="fill" style="width: 78%; background: var(--neon-orange);"></div></div>
+                    <p class="risk-desc"><strong>Reason: Official Docs Section 4 -</strong> Recent 5 videos share highly similar templates and voice tones. Risk of YPP demonetization. Action required.</p>
+                </div>
+            </div>
+
+            <!-- Next Strategy (Locked for Pro) -->
+            <div class="dash-card strategy-card premium-lock">
+                <div class="premium-ribbon">👑 PRO EXCLUSIVE</div>
+                <h3>🚀 Algorithm-Hacking Viral Blueprints</h3>
+                <p class="hook-text">Analysis complete. We found a critical 'loophole' to boost your algorithm exposure by <strong>300%+</strong>.<br>Apply these blueprints to your next video for an explosion in views.</p>
+                
+                <div class="blurred-content">
+                    <div class="strategy-box">
+                        <h4>1. 180-Degree Channel Direction Pivot</h4>
+                        <p>If you continue like this, your channel will die in 6 months. Pivot your core target to women in their 30s. Change the thumbnail font. The first 5 seconds hook MUST start like this: "..."</p>
+                    </div>
+                    <div class="strategy-box">
+                        <h4>2. Video Packages You Must Make NOW</h4>
+                        <ul>
+                            <li><strong>🔥 Title 1:</strong> [Never Leak This] Why doing XXX will ruin your life</li>
+                            <li><strong>🔥 Title 2:</strong> 10-year YouTuber reveals secret XXX setup</li>
+                            <li><strong>📝 Description:</strong> Hidden keyword placement to instantly ride the algorithm...</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="lock-overlay">
+                    <i class="fa-solid fa-lock" style="font-size: 3rem; color: #f6d365; margin-bottom: 1rem;"></i>
+                    <h3>Unlock the Secret Blueprints Instantly!</h3>
+                    <p>Choose the right plan for your channel and uncover the secrets to viral growth.</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: center;">
+                        <button class="btn-outline" style="background: rgba(0,0,0,0.5);" onclick="document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });">Basic Plan ($3.50)</button>
+                        <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });">Pro Plan ($10.50)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2>Please <span class="highlight">Log in</span> for your free scan.</h2>
+                <p>To prevent bot abuse, authentication is required.<br><small>*We track Channel IDs, so only 1 free scan is allowed per channel regardless of multiple accounts.</small></p>
+            </div>
+            <div class="sns-login-container">
+                <button class="sns-btn google" onclick="handleSnsLogin('Google')">
+                    <i class="fa-brands fa-google"></i> Continue with Google
+                </button>
+                <button class="sns-btn apple" style="background: #000; color: #fff;" onclick="handleSnsLogin('Apple')">
+                    <i class="fa-brands fa-apple"></i> Continue with Apple
+                </button>
+                <button class="sns-btn twitter" style="background: #1DA1F2; color: #fff;" onclick="handleSnsLogin('Twitter')">
+                    <i class="fa-brands fa-twitter"></i> Continue with Twitter
+                </button>
+                <button class="sns-btn facebook" onclick="handleSnsLogin('Facebook')">
+                    <i class="fa-brands fa-facebook-f"></i> Continue with Facebook
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="tubegeny.js"></script>
+</body>
+</html>
