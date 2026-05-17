@@ -13,16 +13,27 @@
     <!-- Navigation -->
     <nav class="navbar">
         <a href="#" class="logo" id="logo-btn" style="text-decoration:none;"><i class="fa-brands fa-youtube" style="color: var(--neon-primary);"></i> TubeGeny</a>
-        <div class="nav-links" id="nav-links-default">
-            <a href="#why-need">Why TubeGeny?</a>
-            <a href="#features">Features</a>
-            <a href="#pricing">Pricing</a>
-            <a href="index.html" class="portfolio-link">Portfolio</a>
-            <a href="#" id="login-nav-btn" class="btn-outline" style="padding: 0.5rem 1rem; margin-left: 1rem;">Login</a>
-        </div>
-        <div class="nav-links hidden" id="nav-links-dashboard">
-            <a href="#" id="back-home-btn" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
-            <a href="#" id="mypage-nav-btn" class="btn-outline" style="padding: 0.5rem 1rem; margin-left: 1rem;">My Page</a>
+        <div class="nav-links" id="nav-links-container">
+            <!-- Menus that are always visible on landing -->
+            <span id="landing-menus">
+                <a href="#why-need">Why TubeGeny?</a>
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="index.html" class="portfolio-link">Portfolio</a>
+            </span>
+            
+            <!-- Dashboard navigation items (hidden on landing by default) -->
+            <span id="dash-menus" class="hidden">
+                <a href="#" id="back-home-btn" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+            </span>
+
+            <!-- Auth states -->
+            <span id="auth-logged-out">
+                <a href="#" id="login-nav-btn" class="btn-outline" style="padding: 0.5rem 1rem; margin-left: 1rem;">Login</a>
+            </span>
+            <span id="auth-logged-in" class="hidden">
+                <a href="#" id="mypage-nav-btn" class="btn-outline" style="padding: 0.5rem 1rem; margin-left: 1rem;">My Page</a>
+            </span>
         </div>
     </nav>
 
@@ -392,13 +403,43 @@
         
         function updateUIAfterLogin() {
             if (currentUser) {
-                document.getElementById('nav-links-default').classList.add('hidden');
-                document.getElementById('nav-links-dashboard').classList.remove('hidden');
+                document.getElementById('auth-logged-out').classList.add('hidden');
+                document.getElementById('auth-logged-in').classList.remove('hidden');
                 
-                // If they are on the landing page, show dashboard
-                document.getElementById('landing-content').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
+                // Switch to dashboard view
+                showDashboard();
             }
+        }
+        
+        function showLanding() {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('mypage').classList.add('hidden');
+            document.getElementById('landing-content').classList.remove('hidden');
+            
+            document.getElementById('dash-menus').classList.add('hidden');
+            document.getElementById('landing-menus').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+        
+        function showDashboard() {
+            document.getElementById('landing-content').classList.add('hidden');
+            document.getElementById('mypage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            
+            document.getElementById('landing-menus').classList.add('hidden');
+            document.getElementById('dash-menus').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+        
+        function showMyPage() {
+            document.getElementById('landing-content').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('mypage').classList.remove('hidden');
+            
+            document.getElementById('landing-menus').classList.add('hidden');
+            document.getElementById('dash-menus').classList.remove('hidden');
+            window.scrollTo(0, 0);
+            loadMyPageData();
         }
 
         updateUIAfterLogin();
@@ -521,34 +562,24 @@
                 });
                 localStorage.setItem('tubegeny_user', JSON.stringify(currentUser));
 
-                document.getElementById('landing-content').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
+                showDashboard();
             });
         }
 
         // Navigation
         document.getElementById('logo-btn').addEventListener('click', (e) => {
             e.preventDefault();
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('mypage').classList.add('hidden');
-            document.getElementById('landing-content').classList.remove('hidden');
-            window.scrollTo(0, 0);
+            showLanding();
         });
 
         document.getElementById('back-home-btn').addEventListener('click', (e) => {
             e.preventDefault();
-            document.getElementById('mypage').classList.add('hidden');
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('landing-content').classList.remove('hidden');
-            window.scrollTo(0, 0);
+            showLanding();
         });
 
         document.getElementById('mypage-nav-btn').addEventListener('click', (e) => {
             e.preventDefault();
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('landing-content').classList.add('hidden');
-            document.getElementById('mypage').classList.remove('hidden');
-            loadMyPageData();
+            showMyPage();
         });
 
         function loadMyPageData() {
