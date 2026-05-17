@@ -326,6 +326,7 @@
                     <div>
                         <h4 id="mypage-name" style="font-size: 1.5rem; margin: 0 0 0.5rem 0;">User Name</h4>
                         <p id="mypage-email" style="color: #aaa; margin: 0;">user@example.com</p>
+                        <button id="logout-btn" class="btn-outline" style="margin-top: 1rem; border-color: #ff4757; color: #ff4757; padding: 0.3rem 0.8rem; font-size: 0.8rem;">Logout</button>
                     </div>
                 </div>
             </div>
@@ -398,9 +399,18 @@
 
     <!-- Application Logic -->
     <script>
-        // Check Auth Status on Load (Reset for testing purposes)
-        localStorage.removeItem('tubegeny_user');
-        let currentUser = null;
+        // 1. Firebase 연동을 위한 설정 (실제 연동 시 YOUR_API_KEY 부분 등을 모두 교체하세요)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Load stored user data so history is preserved
+        let currentUser = JSON.parse(localStorage.getItem('tubegeny_user'));
         
         function updateUIAfterLogin() {
             if (currentUser) {
@@ -506,36 +516,66 @@
         });
 
         // Dummy Login Actions
-        function mockLogin(provider, btnId) {
+        // Real Social Login Logic using Firebase (Fallback to Dummy if config is missing)
+        async function handleSocialLogin(providerName, btnId) {
             const btn = document.getElementById(btnId);
             const originalHTML = btn.innerHTML;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Logging in...`;
             btn.style.opacity = '0.8';
             btn.style.pointerEvents = 'none';
             
-            setTimeout(() => {
-                currentUser = {
-                    name: "Creator_" + provider,
-                    email: "user@" + provider + ".com",
-                    plan: "Free Tier",
-                    history: []
-                };
-                localStorage.setItem('tubegeny_user', JSON.stringify(currentUser));
-                loginModal.classList.add('hidden');
+            // 만약 Firebase API 키가 세팅되지 않았다면, 모의(Dummy) 로그인으로 동작합니다.
+            if(firebaseConfig.apiKey === "YOUR_API_KEY") {
+                setTimeout(() => {
+                    alert("🚨 [개발자 안내] 실제 연동을 위해서는 소스코드 하단의 firebaseConfig 에 실제 Firebase 키값을 입력해야 합니다.\n(현재는 테스트용 임시 로그인으로 처리됩니다.)");
+                    let existingUser = JSON.parse(localStorage.getItem('tubegeny_user'));
+                    currentUser = {
+                        name: "Creator_" + providerName,
+                        email: "user@" + providerName + ".com",
+                        plan: existingUser ? existingUser.plan : "Free Tier",
+                        history: existingUser ? existingUser.history : []
+                    };
+                    localStorage.setItem('tubegeny_user', JSON.stringify(currentUser));
+                    loginModal.classList.add('hidden');
+                    
+                    btn.innerHTML = originalHTML;
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                    updateUIAfterLogin();
+                }, 800);
+                return;
+            }
+            
+            try {
+                // Here you would implement real Firebase auth logic
+                // import { getAuth, signInWithPopup, GoogleAuthProvider, ... } from "firebase/auth";
+                // const result = await signInWithPopup(auth, provider);
+                // currentUser = result.user;
                 
-                // Reset btn
+                // For now, this throws an error since we don't have the real library imported
+                throw new Error("Firebase library not fully loaded in this static file context. Please add Firebase CDN imports.");
+            } catch (err) {
+                alert("Login Failed: " + err.message);
                 btn.innerHTML = originalHTML;
                 btn.style.opacity = '1';
                 btn.style.pointerEvents = 'auto';
-                
-                updateUIAfterLogin();
-            }, 800);
+            }
         }
 
-        document.getElementById('btn-google-login').addEventListener('click', () => mockLogin('Google', 'btn-google-login'));
-        document.getElementById('btn-apple-login').addEventListener('click', () => mockLogin('Apple', 'btn-apple-login'));
-        document.getElementById('btn-twitter-login').addEventListener('click', () => mockLogin('X', 'btn-twitter-login'));
-        document.getElementById('btn-facebook-login').addEventListener('click', () => mockLogin('Facebook', 'btn-facebook-login'));
+        document.getElementById('btn-google-login').addEventListener('click', () => handleSocialLogin('Google', 'btn-google-login'));
+        document.getElementById('btn-apple-login').addEventListener('click', () => handleSocialLogin('Apple', 'btn-apple-login'));
+        document.getElementById('btn-twitter-login').addEventListener('click', () => handleSocialLogin('X', 'btn-twitter-login'));
+        document.getElementById('btn-facebook-login').addEventListener('click', () => handleSocialLogin('Facebook', 'btn-facebook-login'));
+
+        // Logout Event Listener
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            // Logout logic
+            localStorage.removeItem('tubegeny_user');
+            currentUser = null;
+            document.getElementById('auth-logged-in').classList.add('hidden');
+            document.getElementById('auth-logged-out').classList.remove('hidden');
+            showLanding();
+        });
 
         // Analyze Button (Mock)
         const analyzeBtn = document.getElementById('analyze-btn');
