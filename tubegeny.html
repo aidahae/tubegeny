@@ -31,15 +31,21 @@
         <!-- Hero Section -->
         <header class="hero">
             <div class="glow-bg"></div>
+            <!-- Decorative 3D elements -->
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            
             <div class="hero-content reveal">
                 <div class="badge">🔥 The Ultimate AI Shield for Creators</div>
                 <h1 class="hero-title">
-                    What if the YouTube channel you spent years building<br>
+                    What if the YouTube channel<br>
+                    you spent years building<br>
                     <span class="highlight">gets demonetized tomorrow?</span>
                 </h1>
                 <p class="hero-subtitle">
-                    Stop living in fear of sudden yellow icons and algorithm changes.<br>
-                    In just 10 seconds, get an <strong>AI safety scan based on official policies</strong> and unlock the <strong>exact viral blueprints</strong> the algorithm wants.
+                    Stop living in fear of sudden yellow icons and algorithm changes.<br><br>
+                    In just 10 seconds, get an <strong>AI safety scan</strong> based on official policies<br>
+                    and unlock the <strong>exact viral blueprints</strong> the algorithm wants.
                 </p>
                 
                 <div class="url-input-box 3d-hover">
@@ -55,18 +61,34 @@
         <section id="why-need" class="reveal">
             <h2 class="section-title">The Silent Fear <span style="color: var(--neon-primary);">90% of YouTubers</span> Face</h2>
             <div class="glass-card 3d-hover problem-card-large">
-                <p class="quote-text">
-                    "I subconsciously open the YouTube Studio app the moment I wake up.<br>
-                    Just to check if I got a <strong>yellow icon</strong> or if my <strong>monetization is suspended</strong>..."
-                </p>
-                <div class="pain-points">
-                    <p><i class="fa-solid fa-triangle-exclamation neon-icon"></i> Policies change daily. You have no way to fact-check if your video is safe.</p>
-                    <p><i class="fa-solid fa-triangle-exclamation neon-icon"></i> Dealing with hate comments destroys your mental health and creativity.</p>
-                    <p><i class="fa-solid fa-triangle-exclamation neon-icon"></i> You stare at a blank screen all night, clueless about what the algorithm wants next.</p>
+                <div class="quote-box">
+                    <i class="fa-solid fa-quote-left quote-icon"></i>
+                    <p class="quote-text">
+                        "I subconsciously open the YouTube Studio app the moment I wake up.<br>
+                        Just to check if I got a <strong style="color: #ffcc00;">yellow icon</strong> or if my <strong>monetization is suspended</strong>..."
+                    </p>
                 </div>
-                <p class="solution-text">
-                    Leave the anxiety to TubeGeny.<br>Your only job is to <span class="text-glow">create</span>.
-                </p>
+                
+                <div class="pain-points">
+                    <div class="pain-point-item">
+                        <i class="fa-solid fa-triangle-exclamation neon-icon"></i> 
+                        <p><strong>Policies change daily.</strong> You have no way to fact-check if your video is safe.</p>
+                    </div>
+                    <div class="pain-point-item">
+                        <i class="fa-solid fa-triangle-exclamation neon-icon"></i> 
+                        <p><strong>Hate comments.</strong> Dealing with them destroys your mental health and creativity.</p>
+                    </div>
+                    <div class="pain-point-item">
+                        <i class="fa-solid fa-triangle-exclamation neon-icon"></i> 
+                        <p><strong>Algorithm anxiety.</strong> You stare at a blank screen all night, clueless about what it wants next.</p>
+                    </div>
+                </div>
+                
+                <div class="solution-box">
+                    <p class="solution-text">
+                        Leave the anxiety to TubeGeny.<br>Your only job is to <span class="text-glow">create</span>.
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -145,7 +167,7 @@
                         <li class="disabled"><i class="fa-solid fa-xmark"></i> No Viral Blueprints</li>
                         <li class="disabled"><i class="fa-solid fa-xmark"></i> No Auto-Comment Alerts</li>
                     </ul>
-                    <button class="btn-outline full-width" onclick="window.location.href='tubegeny-checkout.html?plan=basic'" style="margin-top: 1rem;">Start Basic Plan</button>
+                    <button class="btn-secondary full-width" onclick="window.location.href='tubegeny-checkout.html?plan=basic'" style="margin-top: 1rem;">Start Basic Plan</button>
                 </div>
 
                 <!-- Premium -->
@@ -306,7 +328,7 @@
 
     <!-- Login Modal -->
     <div id="login-modal" class="modal hidden">
-        <div class="modal-content 3d-card">
+        <div class="modal-content 3d-card" style="max-width: 450px;">
             <span class="close-btn" id="close-modal-btn">&times;</span>
             <div class="modal-header">
                 <h2>Welcome Back</h2>
@@ -315,19 +337,24 @@
             </div>
             
             <div class="sns-login-container">
-                <!-- Apple (Custom styled) -->
-                <button class="sns-btn apple" id="btn-apple-login" style="background: #fff; color: #000;">
-                    <i class="fa-brands fa-apple" style="font-size: 1.2rem;"></i> Continue with Apple
+                <!-- Google -->
+                <button class="sns-btn google" id="btn-google-login">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style="width: 24px; height: 24px;"> Continue with Google
+                </button>
+
+                <!-- Apple -->
+                <button class="sns-btn apple" id="btn-apple-login">
+                    <i class="fa-brands fa-apple" style="font-size: 1.5rem;"></i> Continue with Apple
                 </button>
 
                 <!-- Twitter / X -->
-                <button class="sns-btn twitter" id="btn-twitter-login" style="background: #000; color: #fff; border: 1px solid #333;">
-                    <i class="fa-brands fa-x-twitter"></i> Continue with X
+                <button class="sns-btn twitter" id="btn-twitter-login">
+                    <i class="fa-brands fa-x-twitter" style="font-size: 1.5rem;"></i> Continue with X
                 </button>
 
                 <!-- Facebook -->
                 <button class="sns-btn facebook" id="btn-facebook-login">
-                    <i class="fa-brands fa-facebook"></i> Continue with Facebook
+                    <i class="fa-brands fa-facebook" style="font-size: 1.5rem;"></i> Continue with Facebook
                 </button>
             </div>
         </div>
