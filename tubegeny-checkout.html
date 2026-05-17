@@ -228,38 +228,22 @@
         </div>
 
         <!-- Payment Side -->
-        <div class="payment-side">
-            <h2>Payment Details</h2>
+        <div class="payment-side" style="text-align: center;">
+            <h2>Complete your payment</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Secure checkout with PayPal</p>
             
-            <div class="input-group">
-                <label>Email Address</label>
-                <input type="email" placeholder="you@example.com" id="checkout-email">
-            </div>
-
-            <div class="input-group">
-                <label>Card Information (Test Mode)</label>
-                <input type="text" placeholder="Card Number (0000 0000 0000 0000)" id="checkout-card" maxlength="19">
-            </div>
-            
-            <div class="card-element">
-                <div class="input-group" style="flex: 1;">
-                    <input type="text" placeholder="MM/YY">
-                </div>
-                <div class="input-group" style="flex: 1;">
-                    <input type="text" placeholder="CVC">
-                </div>
-            </div>
-
-            <button class="btn-pay" id="pay-btn">
-                <span id="pay-btn-text">Pay $10.50</span>
-            </button>
+            <!-- PayPal Button Container -->
+            <div id="paypal-button-container" style="max-width: 400px; margin: 0 auto;"></div>
 
             <div class="secure-badge">
                 <i class="fa-solid fa-lock"></i>
-                Guaranteed safe & secure checkout powered by Stripe
+                Guaranteed safe & secure checkout powered by PayPal
             </div>
         </div>
     </div>
+
+    <!-- PayPal SDK (Test mode 'sb'. User must replace with their Live Client ID) -->
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
 
     <script>
         // Dynamic Plan Rendering
@@ -271,10 +255,12 @@
         const payBtnText = document.getElementById('pay-btn-text');
         const benefitsList = document.getElementById('benefits-list');
 
+        let planPrice = '10.50';
+
         if (plan === 'basic') {
             planNameEl.textContent = 'Basic Plan';
             priceAmountEl.textContent = '$3.50';
-            payBtnText.textContent = 'Pay $3.50';
+            planPrice = '3.50';
             benefitsList.innerHTML = `
                 <li><i class="fa-solid fa-check"></i> 1 Channel Supported</li>
                 <li><i class="fa-solid fa-check"></i> Manual Deep Scans (10/mo)</li>
@@ -282,25 +268,35 @@
             `;
         }
 
-        const payBtn = document.getElementById('pay-btn');
-        payBtn.addEventListener('click', () => {
-            const originalText = payBtn.innerHTML;
-            payBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-            payBtn.style.opacity = '0.8';
-            payBtn.disabled = true;
-
-            // Simulate Network Request
-            setTimeout(() => {
-                // Redirect back to main page with success query parameter
-                window.location.href = `tubegeny.html?payment=success&plan=${plan}`;
-            }, 1500);
-        });
-
-        // Simple formatter for card number
-        const cardInput = document.getElementById('checkout-card');
-        cardInput.addEventListener('input', function (e) {
-            this.value = this.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
-        });
+        // Initialize PayPal Smart Buttons
+        paypal.Buttons({
+            style: {
+                shape: 'rect',
+                color: 'gold',
+                layout: 'vertical',
+                label: 'subscribe'
+            },
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: planPrice // Dynamically sets 3.50 or 10.50
+                        },
+                        description: `TubeGeny ${plan.toUpperCase()} Plan`
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Payment successful! Redirect to dashboard
+                    window.location.href = `tubegeny.html?payment=success&plan=${plan}`;
+                });
+            },
+            onError: function(err) {
+                console.error('PayPal Error:', err);
+                alert('Payment failed or was cancelled. Please try again.');
+            }
+        }).render('#paypal-button-container');
     </script>
 </body>
 </html>
