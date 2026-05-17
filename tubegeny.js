@@ -196,16 +196,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.viewReport = function(url) {
         if (window.db.isPro()) {
-            alert('Opening detailed AI blueprint report for: ' + url + '\n(Pro Feature Unlocked!)');
-            // In a real app, this would open a modal with the saved AI JSON response
+            const history = window.db.getHistory();
+            const item = history.find(h => h.url === url);
+            if (item && item.resultData) {
+                window.renderDashboard(item.channelTitle || item.url, item.resultData);
+            } else {
+                alert('Detailed report data not found for this channel. Please scan again.');
+            }
         } else {
             alert('Viewing past reports and Viral Blueprints requires the Pro plan! Please upgrade.');
         }
     };
 
-    window.addHistoryItem = function(url, score, isSafe) {
+    window.renderDashboard = function(channelTitle, result) {
+        document.getElementById('dash-channel-name').textContent = channelTitle;
+        document.getElementById('overall-score').textContent = result.score + '%';
+        
+        // Remove existing items to prevent duplicates
+        const riskItems = document.querySelectorAll('.risk-item:not(.premium-lock)');
+        riskItems.forEach(item => item.remove());
+
+        const breakdownCard = document.querySelector('.risk-breakdown-card');
+        
+        // Render new dynamic categories
+        if (result.categories && result.categories.length > 0) {
+            result.categories.forEach(cat => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'risk-item';
+                
+                let barColor = '#27c93f'; // safe
+                let levelClass = 'low';
+                if (cat.riskPercentage >= 70) { 
+                    barColor = 'var(--neon-orange)'; 
+                    levelClass = 'high'; 
+                } else if (cat.riskPercentage >= 30) { 
+                    barColor = '#f6d365'; 
+                    levelClass = 'medium'; 
+                }
+
+                itemDiv.innerHTML = `
+                    <div class="risk-header">
+                        <span>${cat.name}</span>
+                        <span class="risk-level ${levelClass}">${cat.status} (${cat.riskPercentage}%)</span>
+                    </div>
+                    <div class="progress-bar"><div class="fill" style="width: ${cat.riskPercentage}%; background: ${barColor};"></div></div>
+                    <p class="risk-desc" style="margin-top: 0.5rem; font-size: 0.85rem; color: #aaa;"><strong>Reason:</strong> ${cat.reason}</p>
+                `;
+                
+                // Insert before the premium lock card, or just append to the breakdown card
+                breakdownCard.appendChild(itemDiv);
+            });
+        }
+
+        landingContent.classList.add('hidden');
+        mypageSection.classList.add('hidden');
+        navDefault.classList.add('hidden');
+        
+        dashboardSection.classList.remove('hidden');
+        navDashboard.classList.remove('hidden');
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.addHistoryItem = function(url, score, isSafe, channelTitle, resultData) {
         const dateStr = new Date().toISOString().split('T')[0];
-        window.db.saveHistory({ url, score, isSafe, dateStr });
+        window.db.saveHistory({ url, score, isSafe, dateStr, channelTitle, resultData });
         window.loadHistory();
     };
 
@@ -231,57 +286,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(data.error || 'Failed to analyze channel.');
             }
 
-            dashChannelName.textContent = data.channelTitle || url;
-            
+            const channelTitle = data.channelTitle || url;
             const result = data.analysisResult;
-            document.getElementById('overall-score').textContent = result.score + '%';
             
-            const riskItems = document.querySelectorAll('.risk-item');
-            // Remove hardcoded items
-            riskItems.forEach(item => item.remove());
-
-            const breakdownCard = document.querySelector('.risk-breakdown-card');
-            
-            // Render new dynamic categories
-            if (result.categories && result.categories.length > 0) {
-                result.categories.forEach(cat => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'risk-item';
-                    
-                    let barColor = '#27c93f'; // safe
-                    let levelClass = 'low';
-                    if (cat.riskPercentage >= 70) { 
-                        barColor = 'var(--neon-orange)'; 
-                        levelClass = 'high'; 
-                    } else if (cat.riskPercentage >= 30) { 
-                        barColor = '#f6d365'; 
-                        levelClass = 'medium'; 
-                    }
-
-                    itemDiv.innerHTML = `
-                        <div class="risk-header">
-                            <span>${cat.name}</span>
-                            <span class="risk-level ${levelClass}">${cat.status} (${cat.riskPercentage}%)</span>
-                        </div>
-                        <div class="progress-bar"><div class="fill" style="width: ${cat.riskPercentage}%; background: ${barColor};"></div></div>
-                        <p class="risk-desc"><strong>Reason:</strong> ${cat.reason}</p>
-                    `;
-                    // Insert before the premium lock card, or just append to the breakdown card
-                    breakdownCard.appendChild(itemDiv);
-                });
-            }
-
             // Append to history in My Page
-            window.addHistoryItem(data.channelTitle || url, result.score, result.riskLevel !== 'high');
+            window.addHistoryItem(url, result.score, result.riskLevel !== 'high', channelTitle, result);
 
-            landingContent.classList.add('hidden');
-            mypageSection.classList.add('hidden');
-            navDefault.classList.add('hidden');
-            
-            dashboardSection.classList.remove('hidden');
-            navDashboard.classList.remove('hidden');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Render Dashboard
+            window.renderDashboard(channelTitle, result);
 
         } catch (error) {
             alert('Error during analysis: ' + error.message);
