@@ -19,23 +19,41 @@ export default async function handler(req, res) {
         }
 
         // 1. Extract Handle from URL (e.g. https://youtube.com/@mychannel -> mychannel)
-        let handle = channelUrl;
+        let channelId;
+        let channelTitle;
+        let channelDesc;
+
         if (channelUrl.includes('@')) {
-            handle = channelUrl.split('@')[1].split('/')[0];
+            const handle = channelUrl.split('@')[1].split('/')[0];
+            // Use the more reliable channels API with forHandle
+            const handleRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet&forHandle=%40${handle}&key=${YOUTUBE_API_KEY}`);
+            const handleData = await handleRes.json();
+            
+            if (handleData.items && handleData.items.length > 0) {
+                channelId = handleData.items[0].id;
+                channelTitle = handleData.items[0].snippet.title;
+                channelDesc = handleData.items[0].snippet.description;
+            }
         }
 
-        // 2. Fetch Channel Data from YouTube API
-        // First, search by handle to get channel ID
-        const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=%40${handle}&key=${YOUTUBE_API_KEY}`);
-        const searchData = await searchRes.json();
-        
-        if (!searchData.items || searchData.items.length === 0) {
-            return res.status(404).json({ error: 'Channel not found' });
+        // 2. Fallback to Search API if not found by handle
+        if (!channelId) {
+            // If they just entered a name or URL without @, search for it
+            let query = channelUrl;
+            if (channelUrl.includes('@')) {
+                query = '@' + channelUrl.split('@')[1].split('/')[0];
+            }
+            const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}`);
+            const searchData = await searchRes.json();
+            
+            if (!searchData.items || searchData.items.length === 0) {
+                return res.status(404).json({ error: 'Channel not found. Please check the URL or try entering the @handle directly.' });
+            }
+            
+            channelId = searchData.items[0].snippet.channelId;
+            channelTitle = searchData.items[0].snippet.title;
+            channelDesc = searchData.items[0].snippet.description;
         }
-        
-        const channelId = searchData.items[0].snippet.channelId;
-        const channelTitle = searchData.items[0].snippet.title;
-        const channelDesc = searchData.items[0].snippet.description;
 
         // Fetch recent videos from the channel
         const videosRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&order=date&maxResults=5&type=video&key=${YOUTUBE_API_KEY}`);
