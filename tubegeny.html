@@ -398,8 +398,9 @@
 
     <!-- Application Logic -->
     <script>
-        // Check Auth Status on Load
-        let currentUser = JSON.parse(localStorage.getItem('tubegeny_user'));
+        // Check Auth Status on Load (Reset for testing purposes)
+        localStorage.removeItem('tubegeny_user');
+        let currentUser = null;
         
         function updateUIAfterLogin() {
             if (currentUser) {
