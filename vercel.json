@@ -6,7 +6,17 @@
       "has": [
         {
           "type": "host",
-          "value": "(?<subdomain>.*\\.)?tubegeny\\.com"
+          "value": "tubegeny.com"
+        }
+      ],
+      "destination": "/tubegeny.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.tubegeny.com"
         }
       ],
       "destination": "/tubegeny.html"
