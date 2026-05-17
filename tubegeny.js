@@ -73,6 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = document.getElementById('close-modal');
     const loginNavBtn = document.getElementById('login-nav-btn');
     const mypageNavBtn = document.getElementById('mypage-nav-btn');
+    const backHomeBtn = document.getElementById('back-home-btn');
+    const logoutBtn = document.getElementById('logout-btn');
 
     closeModal.addEventListener('click', () => loginModal.classList.add('hidden'));
     
@@ -83,6 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
         mypageSection.classList.remove('hidden');
         navDashboard.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.showLanding = function() {
+        dashboardSection.classList.add('hidden');
+        mypageSection.classList.add('hidden');
+        navDashboard.classList.add('hidden');
+        
+        landingContent.classList.remove('hidden');
+        navDefault.classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -99,6 +111,22 @@ document.addEventListener('DOMContentLoaded', () => {
         mypageNavBtn.addEventListener('click', (e) => {
             e.preventDefault();
             window.showMyPage();
+        });
+    }
+
+    if (backHomeBtn) {
+        backHomeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.showLanding();
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            window.isLoggedIn = false;
+            loginNavBtn.textContent = 'Login';
+            window.showLanding();
+            alert('Successfully logged out.');
         });
     }
 
