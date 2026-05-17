@@ -9,7 +9,7 @@
           "value": "(?<subdomain>.*\\.)?tubegeny\\.com"
         }
       ],
-      "destination": "/tubegeny.html"
+      "destination": "/tubegeny"
     },
     {
       "source": "/",
@@ -19,7 +19,7 @@
           "value": "(?<subdomain>.*\\.)?lazygeny\\.com"
         }
       ],
-      "destination": "/index.html"
+      "destination": "/"
     }
   ]
 }
