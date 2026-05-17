@@ -248,6 +248,30 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Handle Viral Blueprints (Pro feature)
+        const strategyCard = document.querySelector('.strategy-card');
+        if (result.viralBlueprint1 && result.viralBlueprint2) {
+            const blurredContainer = strategyCard.querySelector('.blurred-content');
+            if (blurredContainer) {
+                blurredContainer.innerHTML = `
+                    <div class="strategy-box">
+                        <h4>1. ${result.viralBlueprint1.title || 'Algorithm Pivot'}</h4>
+                        <p>${result.viralBlueprint1.desc || 'Optimized execution strategy based on current trends.'}</p>
+                    </div>
+                    <div class="strategy-box">
+                        <h4>2. ${result.viralBlueprint2.title || 'Next Viral Video'}</h4>
+                        <p>${result.viralBlueprint2.desc || 'Optimized execution strategy based on current trends.'}</p>
+                    </div>
+                `;
+            }
+        }
+
+        if (window.db.isPro()) {
+            strategyCard.classList.remove('premium-lock');
+        } else {
+            strategyCard.classList.add('premium-lock');
+        }
+
         landingContent.classList.add('hidden');
         mypageSection.classList.add('hidden');
         navDefault.classList.add('hidden');
