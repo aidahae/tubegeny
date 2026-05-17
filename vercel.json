@@ -6,7 +6,7 @@
       "has": [
         {
           "type": "host",
-          "value": "(www\\.)?tubegeny\\.com"
+          "value": "(?<subdomain>.*\\.)?tubegeny\\.com"
         }
       ],
       "destination": "/tubegeny.html"
@@ -16,7 +16,7 @@
       "has": [
         {
           "type": "host",
-          "value": "(www\\.)?lazygeny\\.com"
+          "value": "(?<subdomain>.*\\.)?lazygeny\\.com"
         }
       ],
       "destination": "/index.html"
