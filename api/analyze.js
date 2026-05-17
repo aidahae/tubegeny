@@ -1,5 +1,6 @@
 // Simple in-memory IP cache for rate limiting (persists while Vercel function is warm)
 const ipCache = new Set();
+const ADMIN_IPS = ['221.153.37.25', '127.0.0.1', '::1', 'localhost'];
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -8,7 +9,11 @@ export default async function handler(req, res) {
 
     try {
         const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
-        if (ip !== 'unknown' && ipCache.has(ip)) {
+        
+        // Bypass rate limit for Admins
+        const isAdmin = ADMIN_IPS.some(adminIp => ip.includes(adminIp));
+        
+        if (!isAdmin && ip !== 'unknown' && ipCache.has(ip)) {
             return res.status(429).json({ error: 'You have already used your 1 free scan from this IP address. Please upgrade to Pro to continue.' });
         }
 
