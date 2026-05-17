@@ -327,4 +327,20 @@ document.addEventListener('DOMContentLoaded', () => {
             analyzeBtn.disabled = false;
         }
     };
+
+    // Check for payment success
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+        window.db.setPro('true');
+        alert('🎉 Payment Successful! You are now a PRO user.\nEnjoy unlimited scans and full AI Blueprints.');
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Show my page
+        landingContent.classList.add('hidden');
+        dashboardSection.classList.add('hidden');
+        navDefault.classList.add('hidden');
+        mypageSection.classList.remove('hidden');
+        navDashboard.classList.remove('hidden');
+    }
 });
