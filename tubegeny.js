@@ -17,6 +17,14 @@ window.handleGoogleLogin = function(response) {
         
         window.isLoggedIn = true;
         
+        // Populate My Page profile data
+        const avatarEl = document.getElementById('mypage-avatar');
+        const nameEl = document.getElementById('mypage-name');
+        const emailEl = document.getElementById('mypage-email');
+        if (avatarEl) avatarEl.src = payload.picture;
+        if (nameEl) nameEl.textContent = payload.name;
+        if (emailEl) emailEl.textContent = payload.email;
+
         const modal = document.getElementById('login-modal');
         if (modal) modal.classList.add('hidden');
         
@@ -56,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const landingContent = document.getElementById('landing-content');
     const dashboardSection = document.getElementById('dashboard');
+    const mypageSection = document.getElementById('mypage');
     const navDefault = document.getElementById('nav-links-default');
     const navDashboard = document.getElementById('nav-links-dashboard');
     const dashChannelName = document.getElementById('dash-channel-name');
@@ -63,13 +72,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginModal = document.getElementById('login-modal');
     const closeModal = document.getElementById('close-modal');
     const loginNavBtn = document.getElementById('login-nav-btn');
+    const mypageNavBtn = document.getElementById('mypage-nav-btn');
 
     closeModal.addEventListener('click', () => loginModal.classList.add('hidden'));
     
+    window.showMyPage = function() {
+        landingContent.classList.add('hidden');
+        dashboardSection.classList.add('hidden');
+        navDefault.classList.add('hidden');
+        
+        mypageSection.classList.remove('hidden');
+        navDashboard.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     loginNavBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        loginModal.classList.remove('hidden');
+        if (window.isLoggedIn) {
+            window.showMyPage();
+        } else {
+            loginModal.classList.remove('hidden');
+        }
     });
+
+    if (mypageNavBtn) {
+        mypageNavBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.showMyPage();
+        });
+    }
 
     analyzeBtn.addEventListener('click', () => {
         const url = urlInput.value.trim();
@@ -87,6 +118,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.startAnalysisGlobal(url);
     });
+
+    window.addHistoryItem = function(url, score, isSafe) {
+        const tbody = document.getElementById('mypage-history-body');
+        if (!tbody) return;
+        
+        const dateStr = new Date().toISOString().split('T')[0];
+        const riskClass = isSafe ? 'low' : 'high';
+        const riskColor = isSafe ? '#27c93f' : 'var(--neon-orange)';
+        const riskBadge = isSafe ? 'Safe' : 'Warning';
+        
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+        tr.innerHTML = `
+            <td style="padding: 1rem;">${dateStr}</td>
+            <td style="padding: 1rem; color: #fff;">${url}</td>
+            <td style="padding: 1rem;">
+                <span class="risk-level ${riskClass}" style="padding: 0.2rem 0.5rem; font-size:0.9rem; background: ${riskColor}22; border: 1px solid ${riskColor}; color: ${riskColor}; border-radius: 4px;">
+                    ${score}% (${riskBadge})
+                </span>
+            </td>
+            <td style="padding: 1rem;">
+                <button class="btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;" onclick="alert('Viewing past reports requires Pro plan!')">View Report</button>
+            </td>
+        `;
+        tbody.insertBefore(tr, tbody.firstChild);
+    };
 
     window.startAnalysisGlobal = async function(url) {
         const originalText = analyzeBtn.innerHTML;
@@ -125,8 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetItem.querySelector('.risk-desc').innerHTML = `<strong>Reason:</strong> ${result.riskReason}`;
             }
 
+            // Append to history in My Page
+            window.addHistoryItem(data.channelTitle || url, result.score, result.riskLevel !== 'high');
+
             landingContent.classList.add('hidden');
+            mypageSection.classList.add('hidden');
             navDefault.classList.add('hidden');
+            
             dashboardSection.classList.remove('hidden');
             navDashboard.classList.remove('hidden');
 
