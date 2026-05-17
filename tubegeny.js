@@ -78,7 +78,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closeModal.addEventListener('click', () => loginModal.classList.add('hidden'));
     
+    window.updateMyPageUI = function() {
+        const plan = window.db.getPlan();
+        const planTitle = document.getElementById('mypage-plan-title');
+        const planDesc = document.getElementById('mypage-plan-desc');
+        
+        if (plan === 'pro') {
+            if (planTitle) {
+                planTitle.textContent = 'Pro Tier';
+                planTitle.style.color = '#27c93f';
+            }
+            if (planDesc) planDesc.textContent = 'You are currently on the Pro plan. (Unlimited Scans & Viral Blueprints)';
+        } else if (plan === 'basic') {
+            if (planTitle) {
+                planTitle.textContent = 'Basic Tier';
+                planTitle.style.color = '#3b82f6';
+            }
+            if (planDesc) planDesc.textContent = 'You are currently on the Basic plan. (Unlimited Scans, No Viral Blueprints)';
+        } else {
+            if (planTitle) {
+                planTitle.textContent = 'Free Tier';
+                planTitle.style.color = 'var(--neon-orange)';
+            }
+            if (planDesc) planDesc.textContent = 'You are currently on the Free plan. (1 Free Scan per Channel)';
+        }
+    };
+
     window.showMyPage = function() {
+        window.updateMyPageUI();
         landingContent.classList.add('hidden');
         dashboardSection.classList.add('hidden');
         navDefault.classList.add('hidden');
@@ -157,11 +184,18 @@ document.addEventListener('DOMContentLoaded', () => {
             history.unshift(item); // Add to beginning
             localStorage.setItem('tubeGenyHistory', JSON.stringify(history));
         },
-        isPro: function() {
-            return localStorage.getItem('tubeGenyIsPro') === 'true';
+        getPlan: function() {
+            return localStorage.getItem('tubeGenyPlan') || 'free';
         },
-        setPro: function(status) {
-            localStorage.setItem('tubeGenyIsPro', status);
+        setPlan: function(planName) {
+            localStorage.setItem('tubeGenyPlan', planName);
+        },
+        isPro: function() {
+            return this.getPlan() === 'pro';
+        },
+        hasPaidPlan: function() {
+            const plan = this.getPlan();
+            return plan === 'basic' || plan === 'pro';
         }
     };
 
@@ -301,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ channelUrl: url, isPro: window.db.isPro() })
+                body: JSON.stringify({ channelUrl: url, isPro: window.db.hasPaidPlan() })
             });
 
             const data = await response.json();

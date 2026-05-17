@@ -212,14 +212,14 @@
                 <i class="fa-brands fa-youtube" style="color: var(--neon-red);"></i> TubeGeny
             </div>
             <p class="plan-title">Subscribe to</p>
-            <h1 class="plan-name">Pro Plan</h1>
+            <h1 class="plan-name" id="plan-name">Pro Plan</h1>
             
             <div class="price-row">
                 <span style="color: var(--text-muted);">Billed Monthly</span>
-                <span class="price-amount">$10.50</span>
+                <span class="price-amount" id="price-amount">$10.50</span>
             </div>
 
-            <ul class="benefits">
+            <ul class="benefits" id="benefits-list">
                 <li><i class="fa-solid fa-check"></i> Unlimited Channel Safety Scans</li>
                 <li><i class="fa-solid fa-check"></i> Unlock AI Viral Blueprints</li>
                 <li><i class="fa-solid fa-check"></i> 24/7 Demonetization Monitoring</li>
@@ -251,7 +251,7 @@
             </div>
 
             <button class="btn-pay" id="pay-btn">
-                <span>Pay $10.50</span>
+                <span id="pay-btn-text">Pay $10.50</span>
             </button>
 
             <div class="secure-badge">
@@ -262,6 +262,26 @@
     </div>
 
     <script>
+        // Dynamic Plan Rendering
+        const urlParams = new URLSearchParams(window.location.search);
+        const plan = urlParams.get('plan') || 'pro';
+        
+        const planNameEl = document.getElementById('plan-name');
+        const priceAmountEl = document.getElementById('price-amount');
+        const payBtnText = document.getElementById('pay-btn-text');
+        const benefitsList = document.getElementById('benefits-list');
+
+        if (plan === 'basic') {
+            planNameEl.textContent = 'Basic Plan';
+            priceAmountEl.textContent = '$3.50';
+            payBtnText.textContent = 'Pay $3.50';
+            benefitsList.innerHTML = `
+                <li><i class="fa-solid fa-check"></i> 1 Channel Supported</li>
+                <li><i class="fa-solid fa-check"></i> Manual Deep Scans (10/mo)</li>
+                <li><i class="fa-solid fa-check"></i> Basic Safety Reports</li>
+            `;
+        }
+
         const payBtn = document.getElementById('pay-btn');
         payBtn.addEventListener('click', () => {
             const originalText = payBtn.innerHTML;
@@ -272,7 +292,7 @@
             // Simulate Network Request
             setTimeout(() => {
                 // Redirect back to main page with success query parameter
-                window.location.href = 'tubegeny.html?payment=success';
+                window.location.href = `tubegeny.html?payment=success&plan=${plan}`;
             }, 1500);
         });
 
